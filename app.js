@@ -39,11 +39,19 @@ function showToast(message, type = 'default', duration = 3500) {
 let currentUser = null;
 
 async function loadAuthState() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    currentUser = null;
+    renderNavAuth();
+    return;
+  }
   try {
-    const r = await fetch(`${API}/api/auth/me`, { credentials: 'include' });
-    if (r.ok) { currentUser = await r.json(); }
-    else { currentUser = null; }
-  } catch { currentUser = null; }
+    // using apiFetch which automatically attaches the token
+    currentUser = await apiFetch('/api/auth/me');
+  } catch { 
+    currentUser = null;
+    localStorage.removeItem('token');
+  }
   renderNavAuth();
 }
 
@@ -66,7 +74,8 @@ function renderNavAuth() {
 }
 
 async function logout() {
-  await fetch(`${API}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+  try { await apiFetch('/api/auth/logout', { method: 'POST' }); } catch(e) {}
+  localStorage.removeItem('token');
   currentUser = null;
   renderNavAuth();
   showToast('Signed out successfully');
@@ -75,10 +84,21 @@ async function logout() {
 
 // ─── API Helpers ───
 async function apiFetch(url, options = {}) {
-  const defaults = { credentials: 'include', headers: { 'Content-Type': 'application/json' } };
-  const response = await fetch(`${API}${url}`, { ...defaults, ...options, headers: { ...defaults.headers, ...(options.headers || {}) } });
+  const token = localStorage.getItem('token');
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const combinedHeaders = { ...headers, ...(options.headers || {}) };
+  const response = await fetch(`${API}${url}`, { ...options, headers: combinedHeaders });
+  
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+  
+  // Auto-save token if the server returned a new one (e.g. login/register)
+  if (data.token) {
+    localStorage.setItem('token', data.token);
+  }
+  
   return data;
 }
 
