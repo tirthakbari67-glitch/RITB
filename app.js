@@ -1,7 +1,7 @@
 /* ─── App.js — RITB Shared JS ─── */
 
-const API =  'https://ritb-backend-api.onrender.com';
-const SERVER = ' https://ritb-backend-api.onrender.com';
+const API =  'https://ritb-api.onrender.com';
+const SERVER = 'https://ritb-api.onrender.com';
 
 // ─── If opened directly via file://, auto-redirect to the server ───
 (function () {
