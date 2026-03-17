@@ -21,9 +21,9 @@ const SERVER = isLocal
   }
 })();
 
-// ─── Navigate helper: always navigate via the server origin ───
+// ─── Navigate helper: always navigate via the current frontend origin ───
 function goTo(page) {
-  window.location.href = SERVER + '/' + page;
+  window.location.href = window.location.origin + '/' + page;
 }
 
 // ─── Toast Notifications ───
