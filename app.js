@@ -4,12 +4,12 @@
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 
 // If local, use localhost. If on the internet (Vercel), use Railway!
-const API = isLocal 
-  ? 'http://localhost:5000' 
+const API = isLocal
+  ? 'http://localhost:5000'
   : 'https://merry-emotion-production-0357.up.railway.app';
 
-const SERVER = isLocal 
-  ? 'http://localhost:5000' 
+const SERVER = isLocal
+  ? 'http://localhost:5000'
   : 'https://merry-emotion-production-0357.up.railway.app';
 
 // ─── If opened directly via file://, auto-redirect to the server ───
@@ -21,9 +21,9 @@ const SERVER = isLocal
   }
 })();
 
-// ─── Navigate helper: always navigate via the current frontend origin ───
+// ─── Navigate helper: always navigate via standard relative routing ───
 function goTo(page) {
-  window.location.href = window.location.origin + '/' + page;
+  window.location.href = '/' + page;
 }
 
 // ─── Toast Notifications ───
@@ -48,7 +48,7 @@ async function loadAuthState() {
   try {
     // using apiFetch which automatically attaches the token
     currentUser = await apiFetch('/api/auth/me');
-  } catch { 
+  } catch {
     currentUser = null;
     localStorage.removeItem('token');
   }
@@ -74,7 +74,7 @@ function renderNavAuth() {
 }
 
 async function logout() {
-  try { await apiFetch('/api/auth/logout', { method: 'POST' }); } catch(e) {}
+  try { await apiFetch('/api/auth/logout', { method: 'POST' }); } catch (e) { }
   localStorage.removeItem('token');
   currentUser = null;
   renderNavAuth();
@@ -90,15 +90,15 @@ async function apiFetch(url, options = {}) {
 
   const combinedHeaders = { ...headers, ...(options.headers || {}) };
   const response = await fetch(`${API}${url}`, { ...options, headers: combinedHeaders });
-  
+
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
-  
+
   // Auto-save token if the server returned a new one (e.g. login/register)
   if (data.token) {
     localStorage.setItem('token', data.token);
   }
-  
+
   return data;
 }
 
