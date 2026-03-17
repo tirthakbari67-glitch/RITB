@@ -1,7 +1,7 @@
 /* ─── App.js — RITB Shared JS ─── */
 
-const API =  'https://ritb-api.onrender.com';
-const SERVER = 'https://ritb-api.onrender.com';
+const API =  'https://merry-emotion-production-02ec.up.railway.app';
+const SERVER = 'https://merry-emotion-production-02ec.up.railway.app';
 
 // ─── If opened directly via file://, auto-redirect to the server ───
 (function () {
