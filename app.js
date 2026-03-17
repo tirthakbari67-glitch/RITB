@@ -6,11 +6,11 @@ const isLocal = window.location.hostname === 'localhost' || window.location.host
 // If local, use localhost. If on the internet (Vercel), use Railway!
 const API = isLocal 
   ? 'http://localhost:5000' 
-  : 'https://merry-emotion-production-02ec.up.railway.app';
+  : 'https://merry-emotion-production-0357.up.railway.app';
 
 const SERVER = isLocal 
   ? 'http://localhost:5000' 
-  : 'https://merry-emotion-production-02ec.up.railway.app';
+  : 'https://merry-emotion-production-0357.up.railway.app';
 
 // ─── If opened directly via file://, auto-redirect to the server ───
 (function () {
